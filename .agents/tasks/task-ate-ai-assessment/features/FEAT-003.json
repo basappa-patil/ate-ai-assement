@@ -1,0 +1,26 @@
+{
+  "id": "FEAT-003",
+  "type": "feat",
+  "description": "Build the Streamlit application (6 screens with sidebar navigation and plotly charts), write the engineering summary report, and create the comprehensive README. Depends on FEAT-001 (data pipeline) and FEAT-002 (ML + anomaly modules). Independent of no other FEATs.",
+  "status": "completed",
+  "steps": [
+    "Step 1 — Create app/streamlit_app.py with 6 screens navigated via st.sidebar: Screen 1 'Upload': st.file_uploader for CSV, validate with schema.validate_schema, show success/error, store in st.session_state. Screen 2 'Process': run cleaning.clean_data on uploaded data, display cleaning summary (before/after counts, duplicates removed, missing values handled) as st.metric cards and a summary table. Screen 3 'Dashboard': KPI cards row (st.columns) for overall yield, fail rate, total records. Plotly bar chart for yield by Test_ID. Plotly heatmap for yield by Lot_ID × Test_ID (pivot). Plotly bar chart for top failure modes. Plotly scatter for Measured_Value vs limits (selectbox to pick a test). Use @st.cache_data on analytics computation. Screen 4 'Investigation': text_input for Device_ID or Test_ID filter; show filtered records as dataframe; for each matching record, show Measured_Value vs Lower_Limit/Upper_Limit as a plotly indicator or bar. Screen 5 'AI Analysis': selectbox to pick a record (by Device_ID + Test_ID); run anomaly detection on the dataset; show the selected record's anomaly_score; call explain.generate_explanation and display the explanation text. Screen 6 'Prediction': input form with number_input for VDD_V (default 1.1), Temperature_C (default 75), Retest_Count (default 0), selectbox for Test_ID and Test_Name and Lot_ID and Wafer_ID; on submit, load the trained model with predict.load_artifact, call predict.predict_records, show prediction and probability, generate and show explanation.",
+    "Step 2 — Create reports/engineering_summary.md: Markdown document summarizing: Project overview, Data generation approach (8000 rows, 5 tests, injected quality issues), Cleaning pipeline results (placeholder for actual numbers — note that this is a template), Yield analysis highlights, ML model comparison (baseline vs LR vs RF), Anomaly detection approach (IsolationForest with RobustScaler), Key findings and recommendations, Assumptions and limitations.",
+    "Step 3 — Create README.md at project root: Sections: Project Title & Description, Quick Start (pip install, generate data, train, run app), Architecture (module dependency diagram in ASCII), Project Structure (tree listing), Modeling Decisions (why leakage-safe features, why balanced class weights, why IsolationForest), Assumptions (synthetic data, fixed seed, ~85/15 class split), Limitations (synthetic data not real fab data, no temporal features, no SHAP in default flow), Reproducibility (seed=42, pinned deps), Demo Flow (step-by-step Streamlit walkthrough).",
+    "Step 4 — Verify: Run python -c \"import app.streamlit_app\" to check syntax. Run the full test suite: python -m pytest tests/ -v to confirm nothing is broken."
+  ],
+  "acceptance_criteria": [
+    "app/streamlit_app.py imports without error: python -c \"import app.streamlit_app\"",
+    "All 6 screens are defined and reachable via sidebar navigation",
+    "README.md exists with setup instructions, architecture, and modeling decisions",
+    "reports/engineering_summary.md exists with project summary",
+    "python -m pytest tests/ -v passes ALL tests (including FEAT-001 and FEAT-002 tests)",
+    "Streamlit app uses plotly for charts and @st.cache_data for caching"
+  ],
+  "verification": [
+    "cd \"/Users/basappa.patil/Library/CloudStorage/OneDrive-BTPlc/Desktop/Slides /ate-ai-assessment\" && python -c \"import app.streamlit_app; print('App imports OK')\"",
+    "cd \"/Users/basappa.patil/Library/CloudStorage/OneDrive-BTPlc/Desktop/Slides /ate-ai-assessment\" && python -m pytest tests/ -v"
+  ],
+  "blocked_reason": null,
+  "findings": "App imports cleanly (Streamlit ScriptRunContext warnings are expected when running outside the Streamlit server). All 31 tests pass (FEAT-001: 21, FEAT-002: 10). Used python3 (system Python 3.9.6) with from __future__ import annotations for union types. Created app/__init__.py to make app/ importable as a package. Cached heavy computations (yield analytics, anomaly detection) via @st.cache_data with JSON serialisation for hashable cache keys."
+}
