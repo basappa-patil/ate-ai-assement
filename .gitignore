@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+dist/
+*.egg-info/
+
+# Data files
+data/raw/*.csv
+data/processed/*.csv
+
+# Model artifacts
+models/*.joblib
+
+# Reports
+reports/*.json
+
+# IDE
+.vscode/
+.idea/
+
+# Testing
+.pytest_cache/

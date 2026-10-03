@@ -1,0 +1,8 @@
+[project]
+name = "ate-ai-assessment"
+version = "0.1.0"
+description = "ATE AI Engineering Assessment — yield analytics and failure prediction"
+requires-python = ">=3.10"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
